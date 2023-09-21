@@ -34,11 +34,11 @@ public class jasperReportService {
 
                 // target/classes/reportPDF1.jasper
                 //path para dockerizar
-                final File file = ResourceUtils.getFile("/app/target/classes/reportPDF1.jasper");
-                final File imgLogo = ResourceUtils.getFile("/app/target/classes/logoCPE.png");
+                //final File file = ResourceUtils.getFile("/app/target/classes/reportPDF1.jasper");
+                //final File imgLogo = ResourceUtils.getFile("/app/target/classes/logoCPE.png");
                 //path en desarrollo
-                //final File file = ResourceUtils.getFile("classpath:reportPDF1.jasper");
-                //final File imgLogo = ResourceUtils.getFile("classpath:logoCPE.png");
+                final File file = ResourceUtils.getFile("classpath:reportPDF1.jasper");
+                final File imgLogo = ResourceUtils.getFile("classpath:logoCPE.png");
                 final JasperReport report = (JasperReport) JRLoader.loadObject(file);
 
                 final HashMap<String, Object> parameters = new HashMap<>();

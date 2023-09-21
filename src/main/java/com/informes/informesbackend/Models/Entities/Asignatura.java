@@ -45,6 +45,8 @@ public class Asignatura {
     //@JsonBackReference
     @JoinColumn(name="profesor_id")
     private Profesor profesor;
+    @NotNull
+    private String cicloLectivo;
 
     @OneToMany(mappedBy = "asignatura",  fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore

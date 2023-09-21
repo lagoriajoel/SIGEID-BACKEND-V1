@@ -185,7 +185,6 @@ public class alumnoController {
             Optional<Usuario> usuario= usuarioService.getByNombreUsuario( alumnoOptional.get().getDni());
 
             service.eliminar(alumnoOptional.get().getId());
-         System.out.println("en alumnos");
 
             usuarioService.delete(usuario.get().getId());
 

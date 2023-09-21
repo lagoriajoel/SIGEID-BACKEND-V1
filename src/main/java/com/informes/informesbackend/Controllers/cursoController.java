@@ -41,6 +41,16 @@ public class cursoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/listCursosAlumno/{id}")
+    public ResponseEntity<?> cursosDeAlumno(@PathVariable Long id){
+
+       List<Curso>cursos= service.cursosPorAlumno(id);
+       if (cursos.isEmpty()){
+           return ResponseEntity.badRequest().body(Collections.singletonMap("Mensaje", "El alumno no se encuentra asignado a ningun curso"));
+       }
+        return ResponseEntity.ok(cursos);
+    }
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @PostMapping("/save")
     public ResponseEntity<?> crear(@Valid @RequestBody Curso curso, BindingResult result){
@@ -72,6 +82,7 @@ public class cursoController {
         asignaturas1año.add("Geografía");
         asignaturas1año.add("Lengua Extranjera");
         asignaturas1año.add("Taller");
+        asignaturas1año.add("Informatica");
 
         Set<Asignatura> asignaturasCreadas=new HashSet<>();
 
@@ -80,6 +91,7 @@ public class cursoController {
             asignaturaNueva.setNombre(asignatura);
             asignaturaNueva.setCurso(curso);
             asignaturaNueva.setAnioCurso(curso.getAnio());
+            asignaturaNueva.setCicloLectivo(curso.getCicloLectivo());
             asignaturasCreadas.add(asignaturaNueva);
         });
 

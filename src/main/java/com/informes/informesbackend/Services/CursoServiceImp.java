@@ -28,6 +28,8 @@ public class CursoServiceImp implements CursoService {
         return cursoRepository.findById(id);
     }
 
+
+
     @Override
     @Transactional(readOnly = true)
     public Optional<Curso> porIdConUsuarios(Long id) {
@@ -48,6 +50,11 @@ public class CursoServiceImp implements CursoService {
     @Override
     public void eliminarCursoUsuarioPorId(Long id) {
 
+    }
+
+    @Override
+    public List<Curso> cursosPorAlumno(Long id) {
+        return cursoRepository.findByAlumno(id);
     }
 
     @Override
