@@ -40,6 +40,11 @@ public class AsignaturaServiceImp implements AsignaturaService{
     }
 
     @Override
+    public List<Asignatura> listarPorProfesorPorCicloLectivo(Long idProfesor, String cicloLectivo) {
+        return asignaturaRepository.asignaturasByProfesorByCicloLectivo(idProfesor,cicloLectivo);
+    }
+
+    @Override
     public List<Asignatura> listarPorCurso(Long idCurso) {
         return asignaturaRepository.asignaturasByCurso(idCurso);
     }

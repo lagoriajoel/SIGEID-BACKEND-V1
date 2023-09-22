@@ -17,6 +17,9 @@ public interface AsignaturaService {
     void eliminar(Long id);
 
     List<Asignatura> listarPorProfesor(Long idProfesor);
+
+
+    List<Asignatura> listarPorProfesorPorCicloLectivo(Long idProfesor, String cicloLectivo);
     List<Asignatura> listarPorCurso(Long idCurso);
 
 

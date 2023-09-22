@@ -57,6 +57,18 @@ public class asignaturasController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    @GetMapping("listOfProfesorCicloLectivo/{id}/{cicloLectivo}")
+    public ResponseEntity<?> listarPorProfesorPorCicloLectivo(@PathVariable Long id, @PathVariable String cicloLectivo){
+        List<Asignatura> asignaturas = asignaturaService.listarPorProfesorPorCicloLectivo(id, cicloLectivo);
+
+        if(!asignaturas.isEmpty()) {
+            return new ResponseEntity<>(asignaturas,HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('DIRECTIVO')")
     @GetMapping("listOfCurso/{idCurso}")
     public ResponseEntity<?> listarPorCurso(@PathVariable Long idCurso){
