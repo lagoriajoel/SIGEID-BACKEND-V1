@@ -25,6 +25,6 @@ public interface informeService {
 
     List<InformeDesempenio> listarPorAnio(String anio);
 
-    int InformesPorAsignaturasAnio(String Asignatura, String anio);
+    int InformesPorAsignaturasAnio(String Asignatura, String anio, String cicloLectivo);
     int NumAlumnosConInformesPorAnio(String anio);
 }

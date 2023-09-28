@@ -3,6 +3,7 @@ package com.informes.informesbackend.Controllers;
 import com.informes.informesbackend.Models.Entities.*;
 import com.informes.informesbackend.Models.Entities.EntitiesDTO.ContenidoInformeDto;
 import com.informes.informesbackend.Models.Entities.EntitiesDTO.InformesDTO;
+import com.informes.informesbackend.Models.Entities.EntitiesDTO.estadisticaDTO;
 import com.informes.informesbackend.Models.Entities.EntitiesDTO.informeContenidoDto;
 import com.informes.informesbackend.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class informesController {
     @Autowired
     private AlumnoService alumnoService;
     @Autowired
+    private  AsignaturaService  asignaturaService;
+    @Autowired
     private ContenidoAdeudadoService contenidoAdeudadoService;
     @Autowired
     private CriterioInformeImpl criterioInformeService;
@@ -42,6 +45,14 @@ public class informesController {
     @GetMapping("/list/{id}")
     public ResponseEntity<?> detalle(@PathVariable Long id){
         Optional<InformeDesempenio> informeDesempeñoOptional = informeService.listarporId(id);
+        if (informeDesempeñoOptional.isPresent()){
+            return ResponseEntity.ok(informeService.listarporId(id));
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @GetMapping("/listAlumno/{id}/asignatura/{idAsignatura}")
+    public ResponseEntity<?> porAlumnoAsignatura(@PathVariable Long id, @PathVariable Long idAsignatura){
+        Optional<InformeDesempenio> informeDesempeñoOptional = informeService.encontrarAlumno(id,idAsignatura);
         if (informeDesempeñoOptional.isPresent()){
             return ResponseEntity.ok(informeDesempeñoOptional.get());
         }
@@ -66,13 +77,30 @@ public class informesController {
         return ResponseEntity.ok(informeService.listarPorAnio(anio));
     }
     @GetMapping("/numInformesMateria/{materia}/{anio}")
-    public ResponseEntity<?> listarPorAnioCurso( @PathVariable String materia, @PathVariable String anio){
-        return ResponseEntity.ok(informeService.InformesPorAsignaturasAnio(materia,anio));
+    public ResponseEntity<?> listarPorAnioCurso( @PathVariable String materia, @PathVariable String anio, String cicloLectivo){
+        return ResponseEntity.ok(informeService.InformesPorAsignaturasAnio(materia,anio, cicloLectivo));
     }
     @GetMapping("/numAlumnosConInformePorAnio/{anio}")
     public ResponseEntity<?> NumAlumnosConInformes(  @PathVariable String anio){
         return ResponseEntity.ok(informeService.NumAlumnosConInformesPorAnio(anio));
     }
+
+    @GetMapping("/estadisticas/{anio}/{cicloLectivo}")
+    public ResponseEntity<?> estadisticaPorAño(@PathVariable String anio ,@PathVariable String cicloLectivo){
+        Set<estadisticaDTO> estadisticas =new HashSet<>();
+
+        List<String> nombreAsignaturas= asignaturaService.nombresAsignaturasPorAnio(anio);
+        System.out.println(nombreAsignaturas);
+        nombreAsignaturas.forEach(asignatura -> {
+            int dato=informeService.InformesPorAsignaturasAnio(asignatura,anio,cicloLectivo);
+            estadisticaDTO NuevaEstadistica=new estadisticaDTO(asignatura, dato);
+            estadisticas.add(NuevaEstadistica);
+        });
+
+
+        return ResponseEntity.ok(estadisticas);
+    }
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     @PostMapping("/save")
     public ResponseEntity<?> crearInforme(@Valid @RequestBody InformesDTO informeDto, BindingResult result){
@@ -90,6 +118,7 @@ public class informesController {
         nuevoInforme.setAsignatura(informeDto.getAsignatura());
         nuevoInforme.setProfesorNombre(informeDto.getProfesorNombre());
         nuevoInforme.setFecha((rightNow.getTime()));
+        nuevoInforme.setCreated(true);
         InformeDesempenio informeDB = informeService.guardar(nuevoInforme);
        /** se crea un conjunto de tipo contenidoInforme y se instancian cada contenidoInforme **/
         Set<Contenido> contenidosInformeDto=informeDto.getContenidosAdeudados();
@@ -281,8 +310,9 @@ public class informesController {
 
     }
     @PreAuthorize("hasRole('PROFESOR')")
-    @PutMapping("/actualizarContenidoFebrero/")
-    public ResponseEntity<?> actualizarContenidoFebrero(@RequestBody List<ContenidoAdeudado> contenidos){
+    @PutMapping("/actualizarContenidoFebrero/{id}")
+    public ResponseEntity<?> actualizarContenidoFebrero(@PathVariable Long id,@RequestBody List<ContenidoAdeudado> contenidos){
+
 
         contenidos.forEach(contenido->{
 
@@ -300,6 +330,12 @@ public class informesController {
 
         });
 
+        Optional<InformeDesempenio> informeDesempenioOptional= informeService.listarporId(id);
+           if (informeDesempenioOptional.isPresent()){
+               InformeDesempenio informeGuardar=informeDesempenioOptional.get();
+               informeGuardar.setDiciembreFebrero(true);
+               informeService.guardar(informeGuardar);
+           }
         return ResponseEntity.ok().build();
 
 
@@ -337,7 +373,7 @@ public class informesController {
                             contenidoAdeudadoService.guardar(contenidoAdeudado.get());
                         }
                         else {
-                            if(contenidoAdeudado.get().getInstanciaEvaluacion_3().isEmpty()){
+                            if(contenidoAdeudado.get().getInstanciaEvaluacion_4().isEmpty()){
                             contenidoAdeudado.get().setInstanciaEvaluacion_4(contenido.getInstanciaEvaluacion());
                             contenidoAdeudado.get().setAprobado(contenido.isAprobado());
                             contenidoAdeudadoService.guardar(contenidoAdeudado.get());}

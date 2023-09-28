@@ -22,7 +22,7 @@ public interface AsignaturaService {
     List<Asignatura> listarPorProfesorPorCicloLectivo(Long idProfesor, String cicloLectivo);
     List<Asignatura> listarPorCurso(Long idCurso);
 
-
+    List<String> nombresAsignaturasPorAnio(String anio);
     public void GuardarAsignaturas(Set<Asignatura> asignaturas);
 
 }

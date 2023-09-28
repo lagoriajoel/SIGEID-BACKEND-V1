@@ -105,6 +105,8 @@ public class asignaturasController {
        if (!optionalAsignatura.isPresent()){
            return ResponseEntity.unprocessableEntity().build();
        }
+       Optional<Curso> cursoOptional=cursoService.porId(asignatura.getCurso().getId());
+       optionalAsignatura.get().setCurso(cursoOptional.get());
        asignatura.setAsignatura_id(optionalAsignatura.get().getAsignatura_id());
        asignaturaService.guardar(asignatura);
         return ResponseEntity.ok().build();

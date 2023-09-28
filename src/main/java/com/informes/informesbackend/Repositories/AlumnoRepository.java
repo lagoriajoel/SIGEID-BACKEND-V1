@@ -16,8 +16,8 @@ public interface AlumnoRepository extends JpaRepository<Alumno, Long> {
 
     @Query(value = "SELECT  * FROM alumnos where alumnos.id IN (select alumnnos_cursos.alumnos_id from alumnnos_cursos where cursos_id=:id)", nativeQuery=true)
      List<Alumno> findBycurso(Long id);
-    @Query(value = "SELECT  * FROM alumnos where alumnos.id IN (select alumnnos_cursos.alumnos_id from alumnnos_cursos inner join cursos on cursos.id=alumnnos_cursos.cursos_id and cursos.anio=:anio )", nativeQuery=true)
-    List<Alumno> findByAnioCurso(String anio);
+    @Query(value = "SELECT  * FROM alumnos where alumnos.id IN (select alumnnos_cursos.alumnos_id from alumnnos_cursos inner join cursos on cursos.id=alumnnos_cursos.cursos_id and cursos.anio=:anio and cursos.ciclo_lectivo=:cicloLectivo)", nativeQuery=true)
+    List<Alumno> findByAnioCurso(String anio, String cicloLectivo);
 
     @Query(value = "SELECT  count(*) FROM alumnos where alumnos.id IN (select alumnnos_cursos.alumnos_id from alumnnos_cursos inner join cursos on cursos.id=alumnnos_cursos.cursos_id and cursos.anio=:anio )", nativeQuery=true)
     int findNumAlumnosByAnio(String anio);

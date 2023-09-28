@@ -80,9 +80,9 @@ public class alumnoController {
         return  ResponseEntity.ok(service.numAlumnosPorAnio(anio));
     }
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR') or hasRole('DIRECTIVO')")
-    @GetMapping("/listOfAnioCurso/{anio}")
-    public ResponseEntity<?> listaPorAnioCurso(@PathVariable String anio){
-        return  ResponseEntity.ok(service.listarPorAnioCurso(anio));
+    @GetMapping("/listOfAnioCurso/{anio}/cicloLectivo/{cicloLectivo}")
+    public ResponseEntity<?> listaPorAnioCurso(@PathVariable String anio, @PathVariable String cicloLectivo){
+        return  ResponseEntity.ok(service.listarPorAnioCurso(anio, cicloLectivo));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

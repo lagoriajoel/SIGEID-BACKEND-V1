@@ -49,6 +49,11 @@ public class AsignaturaServiceImp implements AsignaturaService{
         return asignaturaRepository.asignaturasByCurso(idCurso);
     }
 
+    @Override
+    public List<String> nombresAsignaturasPorAnio(String anio) {
+        return asignaturaRepository.NombreAsignaturasPorAnio(anio);
+    }
+
     public void GuardarAsignaturas(Set<Asignatura> asignaturas) {
 
         asignaturaRepository.saveAll(asignaturas);

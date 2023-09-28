@@ -67,9 +67,9 @@ public class cursoController {
         crearAsignaturas(cursoDB);
         return ResponseEntity.status(HttpStatus.CREATED).body(cursoDB);
     }
-    @PreAuthorize("hasRole('ADMIN')")
 
-    private void crearAsignaturas(Curso curso) {
+
+    private void crearAsignaturas(Curso curso ) {
        Set<String> asignaturas1año =new HashSet<>();
         asignaturas1año.add("Biología");
         asignaturas1año.add("Física");
@@ -84,9 +84,81 @@ public class cursoController {
         asignaturas1año.add("Taller");
         asignaturas1año.add("Informatica");
 
-        Set<Asignatura> asignaturasCreadas=new HashSet<>();
+        Set<String> asignaturas3año =new HashSet<>();
+        asignaturas3año.add("Seguridad e Higiene");
+        asignaturas3año.add("Física");
+        asignaturas3año.add("Química");
+        asignaturas3año.add("Educación Física");
+        asignaturas3año.add("Dibujo Técnico");
+        asignaturas3año.add("Lengua y Literatura");
+        asignaturas3año.add("Matematica");
+        asignaturas3año.add("Geografía");
+        asignaturas3año.add("Lengua Extranjera");
+        asignaturas3año.add("Taller");
+        asignaturas3año.add("Informatica");
 
-        asignaturas1año.forEach( asignatura ->{
+        Set<String> asignaturas4año =new HashSet<>();
+        asignaturas4año.add("Representacion Grafica");
+        asignaturas4año.add("OCCQPI");
+        asignaturas4año.add("Fundamentos de Procesos Productivos");
+        asignaturas4año.add("Técnologia de los materiales");
+        asignaturas4año.add("EESES");
+        asignaturas4año.add("Lengua y Literatura");
+        asignaturas4año.add("Matematica");
+        asignaturas4año.add("OCEPP");
+        asignaturas4año.add("Lengua Extranjera");
+        asignaturas4año.add("Taller");
+        asignaturas4año.add("Informatica");
+
+        Set<String> asignaturas5año =new HashSet<>();
+        asignaturas5año.add("Analisis y ensayo");
+        asignaturas5año.add("OCCIPP");
+        asignaturas5año.add("AETAC");
+        asignaturas5año.add("Economía");
+        asignaturas5año.add("Diseño y organizacion de Proc Industriales");
+        asignaturas5año.add("Practicas Profecionalizantes");
+        asignaturas5año.add("Matematica");
+        asignaturas5año.add("OCEPP");
+        asignaturas5año.add("Ingles Técnico");
+        asignaturas5año.add("Taller");
+
+        Set<String> asignaturas6año =new HashSet<>();
+        asignaturas6año.add("Gestión de Procesos Productivos");
+        asignaturas6año.add("Marco Jurídico");
+        asignaturas6año.add("Prcticas Profecionalizante II");
+        asignaturas6año.add("Ingles Técnico");
+        asignaturas6año.add("Diseño y organizacion de Proc Industriales");
+        asignaturas6año.add("Practicas Profecionalizantes");
+        asignaturas6año.add("Matematica");
+        asignaturas6año.add("OCCQM");
+        asignaturas6año.add("Analisis y Ensayos");
+        asignaturas6año.add("Taller");
+
+        Set<Asignatura> asignaturasCreadas=new HashSet<>();
+        Set<String> asignaturasGuardar=new HashSet<>();
+        switch(curso.getAnio()) {
+            case "1":
+                asignaturasGuardar=asignaturas1año;
+                break;
+            case "2":
+                asignaturasGuardar=asignaturas1año;
+                break;
+            case "3":
+                asignaturasGuardar=asignaturas3año;
+                break;
+            case "4":
+                asignaturasGuardar=asignaturas4año;
+                break;
+            case "5":
+                asignaturasGuardar=asignaturas5año;
+                break;
+            case "6":
+                asignaturasGuardar=asignaturas6año;
+                break;
+            default:
+                // code block
+        }
+        asignaturasGuardar.forEach( asignatura ->{
             Asignatura asignaturaNueva=new Asignatura();
             asignaturaNueva.setNombre(asignatura);
             asignaturaNueva.setCurso(curso);
@@ -119,7 +191,10 @@ public class cursoController {
     @CrossOrigin("*")
     public ResponseEntity<?> eliminar(@PathVariable Long id){
         Optional<Curso> optionalCurso = service.porId(id);
+        if (optionalCurso.get().getAlumnos().size()>0){
 
+            return ResponseEntity.badRequest().body(Collections.singletonMap("Mensaje", "El curso tiene asignados alumnos. No se puede ELIMINAR"));
+        }
             service.eliminar(optionalCurso.get().getId());
             return ResponseEntity.ok().build();
 

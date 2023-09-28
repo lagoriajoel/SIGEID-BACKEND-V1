@@ -19,7 +19,7 @@ public interface AlumnoService {
 
     List<Alumno>listarPorCurso(Long idCurso);
 
-    List<Alumno>listarPorAnioCurso(String idCurso);
+    List<Alumno>listarPorAnioCurso(String anio, String cicloLectivo);
 
     List<Alumno> guardarLista(List<Alumno> alumnos);
 

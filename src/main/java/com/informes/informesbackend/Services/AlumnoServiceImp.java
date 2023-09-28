@@ -56,8 +56,8 @@ public class AlumnoServiceImp implements AlumnoService{
     }
 
     @Override
-    public List<Alumno> listarPorAnioCurso(String anio) {
-        return alumnoRepository.findByAnioCurso(anio);
+    public List<Alumno> listarPorAnioCurso(String anio, String cicloLectivo) {
+        return alumnoRepository.findByAnioCurso(anio, cicloLectivo);
     }
 
     public List<Alumno> guardarLista(List<Alumno> alumnos){
